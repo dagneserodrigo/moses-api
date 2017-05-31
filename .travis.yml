@@ -1,7 +1,14 @@
 language: node_js
 node_js:
-  - "iojs"
-  - "7"
+- iojs
+- '7'
 cache:
   directories:
-    - "node_modules"
+  - node_modules
+deploy:
+  provider: heroku
+  api_key:
+    secure: Jgwt+8rLYYHB/5+v08KzdWw7JKxQ1OYXbUwvQlALr8DwOAsyy1UTI94XjBl3YssOTLk/FzOmIyAKFU8N6FLn5/M743bGvrba3y+IQxqcA9W31GUrdyyNgiooPXZ4bXx4sUJn+gxSJai/4Q4juq9O8mqYZVVKPUNAh7xT2q9OrHFEYXkHZX0dsn5sWR5rea2yjcL2CRZoEIUSYJjVEkHhuvVT+nIg58OVCI89uo0WYl5tjQBIgQ3gIjZGd0VHKUCqtSEcYyfoAf4cKID76sRWEETdXGuox6dZGH1YrAcx6pN3ASNXVJNaLHG2ZdQqpPo1C5jPjhF64KTmRasXcj7KOGb51uNA+G+MgioOU9WSG/EhDZHlqBbCqyphmM/fgpssYC2USzq6pw+/llRoykDyOSKF4b1Cvgm0T+oNk0pMOn3WjbOyuPNs6urE2fmGhb+3lXnyd1OlJVBPYUMK2RnCEDLr12pHAQGjHOWQzrO56YxLkh3IV6vmQxb3h6VpS++tKWNAq/6Ijk93+2pimaVf9GEriqM8Zd7NtFXg7j5BfeTWH+YbbWckahJXCf3z9D7T24dSAWlc0mmURFvrkEh3CYBym2B3Yd4zzF8VY81O8ldqvI8FcnbaUnYBWZPEkMSocVGV+9GWxcynAOnL4XF6FBRVDs/A1CWvxI5aaT95LtE=
+  app: moses-api
+  on:
+    repo: dagneserodrigo/moses-api
