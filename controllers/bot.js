@@ -19,6 +19,7 @@ module.exports = function (app) {
                     break;
                 }
             }
+            res.set({ 'content-type': 'application/json; charset=utf-8' })
 			res.json({ resposta })
 		}
 	}
