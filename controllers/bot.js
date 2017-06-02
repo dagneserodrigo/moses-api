@@ -12,7 +12,7 @@ module.exports = function (app) {
     }
  
     var CONFIRMA = /(sim|existe|tem)/gi;
-    var NEGATIVA = /não/gi;
+    var NEGATIVA = /(nao|não)*/gi;
 
     var buscarMensagemAtendimentoPorId = function(id) {
         var fluxos = atendimentoFluxo.filter(function(fluxo) { return fluxo.id === id});
@@ -29,7 +29,7 @@ module.exports = function (app) {
     var atendimentoFluxo = [{ 
             anterior: null,
             id: 1,
-            matcher: /existem lançamentos de valores em cartão que não (conferem|fecham) com os da operadora, o que eu faço/,
+            matcher: /[(\w|\d|\s)+lançamentos+(\w|\d|\s)+cartão+(\w|\d|\s)+(não conferem|diferentes|divergentes)+(\w|\d|\s)+operadora+]*/gi,
             resposta: `No sistema de monitoramento, verifique se existe algum PDV com semáforo em vermelho (offline) e me avise.`
         }, {
             anterior: 1,
@@ -39,7 +39,7 @@ module.exports = function (app) {
         }, {
             anterior: 1,
             id: 3,
-            matcher: /não/gi,
+            matcher: NEGATIVA,
             resposta: `Vamos tentar forçar atualização dos lançamentos na operadora. Abra a tela de "Prestação de contas" e clique no botão "Importar dados TEF". Após a sincronização, verifique novamente a conciliação. Caso apresente algum erro de sincronização, toque aqui para abrir um chamado para o suporte da aplicação. Me avise quando a sincronização finalizar.`
         }, {
             anterior: 3,
@@ -81,7 +81,7 @@ module.exports = function (app) {
             var atendimentoFluxoId = buscarFluxoIdPorMensagem(respostaBot);
             var respostas = [];
             atendimentoFluxo.filter(function(fluxo) { return fluxo.anterior === atendimentoFluxoId }).forEach(function(fluxo) {
-                if (fluxo.matcher.test(mensagem)) {
+                if (fluxo.matcher.test(mensagem) && fluxo.id !== 9) {
                     respostas.push({mensagem : fluxo.resposta});
                 }
             });
