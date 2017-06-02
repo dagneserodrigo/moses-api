@@ -15,6 +15,9 @@ var app = express();
 //   next()
 // })
 
+app.use(express.static('public'))
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -24,10 +27,6 @@ load('models')
   .into(app)
 
 const server = http.createServer(app);
-//const io = socketIo.listen(server)
-
-// load('sockets')
-//   .into(io)
 
 var port = process.env.PORT || config.PORT;
 
