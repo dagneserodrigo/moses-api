@@ -5,19 +5,20 @@ const notificationService = require('../service/notification')
 
 const serviceAccount = require('../account.json')
 
-try {
-	admin.initializeApp({
-		credential: admin.credential.cert(serviceAccount),
-		databaseURL: "https://moses-auth.firebaseio.com"
-	})
-} catch (e) { console.log(e) }
-
 module.exports = (app) => {
-
-	const userRef = admin.database().ref('Users')
 
 	return {
 		getAll: (req, res) => {
+
+			try {
+				admin.initializeApp({
+					credential: admin.credential.cert(serviceAccount),
+					databaseURL: "https://moses-auth.firebaseio.com"
+				})
+			} catch (e) { console.log(e) }
+
+			const userRef = admin.database().ref('Users')
+
 			let allTickes = {}
 			userRef.once('value', (snapshot) => {
 				const data = snapshot.val()

@@ -1,7 +1,7 @@
 const CONFIG = require('../config/config')
 const FCM = require('fcm-push')
 
-let fcm = null
+var fcm = null
 try {
 	fcm = new FCM(CONFIG.ServerKey)
 } catch (e) { console.log(e) }
