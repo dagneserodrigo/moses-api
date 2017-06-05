@@ -1,5 +1,6 @@
 angular.module('mosesApp', ['ngMaterial'])
 	.controller('mainController', function ($scope, $http, $mdDialog) {
+
 		$scope.tickets = [];
 
 		$scope.carregar = function () {
@@ -22,22 +23,20 @@ angular.module('mosesApp', ['ngMaterial'])
 		$scope.carregar();
 
 	}).controller('statusController', function ($scope, $http, $mdDialog, ticket, carregar) {
+		$scope.resposta = '';
 
 		$scope.titulo = ticket.titulo;
 		$scope.changeStatus = function (situacao) {
+			if (!$scope.resposta) {
+				return;
+			}
 			$mdDialog.hide();
-			var t = { id: ticket.id, situacaoTicket: situacao, userId: ticket.userId, token: ticket.Token };
+			var t = { id: ticket.id, situacaoTicket: situacao, userId: ticket.userId, token: ticket.Token, resposta: $scope.resposta };
 			$http.post('/ticket', t)
 				.then(function (response) {
 					carregar();
 					$mdDialog.hide();
-					$mdDialog.show({
-						parent: angular.element(document.body),
-						template: '<div style="padding:10px"><h3>' + response.data.message + '</h3></div>',
-						clickOutsideToClose: true,
-						locals: { ticket: ticket, carregar: $scope.carregar },
-						controller: 'statusController'
-					})
+					console.log(response)
 				}, function (error) {
 					$mdDialog.hide();
 					console.log(error);

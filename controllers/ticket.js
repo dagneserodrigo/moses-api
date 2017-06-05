@@ -37,12 +37,12 @@ module.exports = (app) => {
 		changeStatus: (req, res) => {
 			let ticket = req.body
 			const userRef = admin.database().ref('Users')
-
-			userRef.child(ticket.userId)
+			const ticketRef = userRef.child(ticket.userId)
 				.child('Tickets')
 				.child(ticket.id)
-				.child('situacaoTicket')
-				.set(ticket.situacaoTicket)
+
+			ticketRef.child('situacaoTicket').set(ticket.situacaoTicket)
+			ticketRef.child('respostaTicket').set(ticket.resposta)
 
 			notificationService.sendMessage(ticket.token, ticket.id)
 				.then((response) => {

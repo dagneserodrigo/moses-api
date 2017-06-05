@@ -1,9 +1,13 @@
 <md-toolbar>
-    <div class="md-toolbar-tools md-hue-2">
-        <h2 md-truncate flex>{{titulo}}</h2>
-    </div>
+	<div class="md-toolbar-tools md-hue-2">
+		<h2 md-truncate flex>{{titulo}}</h2>
+	</div>
 </md-toolbar>
 <br />
+<md-input-container style="width: 200px">
+	<label>Resposta</label>
+	<input type="text" ng-model="resposta" style="width:200px"></input>
+</md-input-container>
 <md-button class="md-raised md-hue-1" type="button" ng-click="changeStatus('ABERTO')">Aberto</md-button>
 <br />
 <md-button class="md-raised md-hue-2" type="button" ng-click="changeStatus('RESPONDIDO')">Respondido</md-button>
