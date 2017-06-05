@@ -5,21 +5,21 @@ const notificationService = require('../service/notification')
 
 const serviceAccount = require('../account.json')
 
+try {
+	admin.initializeApp({
+		credential: admin.credential.cert(serviceAccount),
+		databaseURL: "https://moses-auth.firebaseio.com"
+	})
+} catch (e) { console.log(e) }
+
+let allTickes = {}
+
 module.exports = (app) => {
 
 	return {
 		getAll: (req, res) => {
-
-			try {
-				admin.initializeApp({
-					credential: admin.credential.cert(serviceAccount),
-					databaseURL: "https://moses-auth.firebaseio.com"
-				})
-			} catch (e) { console.log(e) }
-
 			const userRef = admin.database().ref('Users')
 
-			let allTickes = {}
 			userRef.once('value', (snapshot) => {
 				const data = snapshot.val()
 				for (const keyUser in data) {
@@ -36,6 +36,8 @@ module.exports = (app) => {
 		},
 		changeStatus: (req, res) => {
 			let ticket = req.body
+			const userRef = admin.database().ref('Users')
+
 			userRef.child(ticket.userId)
 				.child('Tickets')
 				.child(ticket.id)
@@ -43,8 +45,12 @@ module.exports = (app) => {
 				.set(ticket.situacaoTicket)
 
 			notificationService.sendMessage(ticket.token, ticket.id)
-
-			res.end()
+				.then((response) => {
+					res.json({ message: "Alterado com sucesso!" })
+				})
+				.catch((err) => {
+					res.json({ message: "Não foi possível alterar o status", error: err })
+				})
 		}
 	}
 }

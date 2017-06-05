@@ -10,7 +10,6 @@ module.exports = {
 	sendMessage: (tokenClient, ticketId) => {
 		const message = {
 			to: tokenClient,
-			collapse_key: 'your_collapse_key',
 			data: {
 				ticketId: ticketId
 			},
@@ -20,13 +19,6 @@ module.exports = {
 			}
 		}
 
-		fcm.send(message)
-			.then(function (response) {
-				console.log("Successfully sent with response: ", response)
-			})
-			.catch(function (err) {
-				console.log("Something has gone wrong!")
-				console.error(err)
-			})
+		return fcm.send(message)
 	}
 }
