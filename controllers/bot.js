@@ -82,7 +82,7 @@ module.exports = function (app) {
             var atendimentoFluxoId = buscarFluxoIdPorMensagem(respostaBot);
             var respostas = [];
             atendimentoFluxo.filter(function(fluxo) { return fluxo.anterior === atendimentoFluxoId }).forEach(function(fluxo) {
-                if (fluxo.matcher.test(mensagem) && fluxo.id !== 9) {
+                if (fluxo.matcher.test(mensagem)) {
                     respostas.push({mensagem : fluxo.resposta});
                 }
             });
