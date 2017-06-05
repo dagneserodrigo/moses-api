@@ -11,8 +11,8 @@ module.exports = function (app) {
         return str;
     }
  
-    var CONFIRMA = /(sim|existe|tem)+/gi;
-    var NEGATIVA = /(nao|não)+/gi;
+    var CONFIRMA = /[sim|existe|tem]/gi;
+    var NEGATIVA = /[nao|não]/gi;
 
     var buscarMensagemAtendimentoPorId = function(id) {
         var fluxos = atendimentoFluxo.filter(function(fluxo) { return fluxo.id === id});
@@ -44,7 +44,7 @@ module.exports = function (app) {
         }, {
             anterior: 3,
             id: 4,
-            matcher: /(terminou|finalizou)+/gi,
+            matcher: /[terminou|finalizou]/gi,
             resposta: `O problema foi resolvido?`
         }, {
             anterior: 4,
@@ -70,7 +70,7 @@ module.exports = function (app) {
 
     var fluxosPadroes = [{
             id: 1,
-            matcher: /(oi|olá|ola)+/gi,
+            matcher: /(oi|olá|ola)/gi,
             resposta: `Olá, em que posso ajudá-lo?`
         }];
 
