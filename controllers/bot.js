@@ -11,8 +11,8 @@ module.exports = function (app) {
         return str;
     }
  
-    var CONFIRMA = /(sim|existe|tem)/gi;
-    var NEGATIVA = /(nao|não)*/gi;
+    var CONFIRMA = /(sim|existe|tem)+/gi;
+    var NEGATIVA = /(nao|não)+/gi;
 
     var buscarMensagemAtendimentoPorId = function(id) {
         var fluxos = atendimentoFluxo.filter(function(fluxo) { return fluxo.id === id});
@@ -29,7 +29,7 @@ module.exports = function (app) {
     var atendimentoFluxo = [{ 
             anterior: null,
             id: 1,
-            matcher: /[(\w|\d|\s)+lançamentos+(\w|\d|\s)+cartão+(\w|\d|\s)+(não conferem|diferentes|divergentes)+(\w|\d|\s)+operadora+]*/gi,
+            matcher: /^(?=.*\blançamentos\b)(?=.*\bcartão\b)(?=.*\b[não conferem|diferentes|divergentes]\b)(?=.*\boperadora\b).*/gi,
             resposta: `No sistema de monitoramento, verifique se existe algum PDV com semáforo em vermelho (offline) e me avise.`
         }, {
             anterior: 1,
@@ -44,7 +44,7 @@ module.exports = function (app) {
         }, {
             anterior: 3,
             id: 4,
-            matcher: /(terminou|finalizou)/gi,
+            matcher: /(terminou|finalizou)+/gi,
             resposta: `O problema foi resolvido?`
         }, {
             anterior: 4,
@@ -66,25 +66,33 @@ module.exports = function (app) {
             id: 8,
             matcher: NEGATIVA,
             resposta: `Neste caso é preciso excluir o lançamento manual. Posso ajudar em algo mais?`
-        }, {
-            anterior: null,
-            id: 9,
-            matcher: /(\w|\d|\s)+/,
-            resposta: `Infelizmente não posso ajudá-lo(a). Toque aqui para abrir um chamado para o serviço compartilhado.`
+        }];
+
+    var fluxosPadroes = [{
+            id: 1,
+            matcher: /(oi|olá|ola)+/gi,
+            resposta: `Olá, em que posso ajudá-lo?`
         }];
 
 	return {
 		talk(req, res) {
             var respostaBot = !req.body.bot ? '' : req.body.bot;
             var mensagem = req.body.mensagem;
-            var resposta = buscarMensagemAtendimentoPorId(9);
+            var resposta = `Infelizmente não posso ajudá-lo(a). Toque aqui para abrir um chamado para o serviço compartilhado.`;
             var atendimentoFluxoId = buscarFluxoIdPorMensagem(respostaBot);
             var respostas = [];
             atendimentoFluxo.filter(function(fluxo) { return fluxo.anterior === atendimentoFluxoId }).forEach(function(fluxo) {
-                if (fluxo.matcher.test(mensagem) && fluxo.id !== 9) {
+                if (fluxo.matcher.test(mensagem)) {
                     respostas.push({mensagem : fluxo.resposta});
                 }
             });
+            if (respostas.length === 0) {
+                fluxosPadroes.forEach(function(fluxo) {
+                    if (fluxo.matcher.test(mensagem)) {
+                        respostas.push({mensagem : fluxo.resposta});
+                    }
+                });
+            } 
             if (respostas.length > 0) {
                 resposta = respostas[0].mensagem;
             }
